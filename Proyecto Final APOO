@@ -1,0 +1,22 @@
+class Estudiante():
+    def __init__(self, nombre,  id):
+        self.nombre = nombre
+        self.id = id
+        self.libros = []
+
+    def añadir_libro(self, nombre, tema, descripcion):
+        libro=Libros(nombre, self, tema, descripcion)
+        self.libros.append(libro)
+
+    def intercambiar_libro(self, nuevo_prop, libro):
+        nuevo_prop.libros.append(libro)
+        libro.propietario = nuevo_prop
+        self.libros.remove(libro)
+
+
+class Libros():
+    def __init__(self, nombre, propietario, tema, descripcion):
+        self.nombre = nombre
+        self.propietario = propietario
+        self.tema = tema
+        self.descripcion = descripcion 
