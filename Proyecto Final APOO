@@ -1,22 +1,173 @@
+from typing import *
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+import time
+import datetime
+
+
+class Scraper():
+    def __init__(self):
+        self.temperatura = []
+        self.horas = []
+
+        options = webdriver.ChromeOptions() 
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        website = "https://weather.com/?Goto=Redirected"
+        path = "C:/Users/Administrador/Downloads/chromedriver_win32/chromedriver.exe"
+        driver = webdriver.Chrome(options=options, service=Service(path))
+        driver.get(website)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "truste-button3"))).click()
+        time.sleep(4)
+
+        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CLASS_NAME, 'LanguageSelector--LanguageSelectorStatus--mXkYQ'))).click()
+        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[3]/div[1]/header/div/div[2]/div[2]/nav/div/div/section/div/ul/li[2]'))).click()
+
+        time.sleep(3)
+        button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'LocationSearch_input')))
+        time.sleep(2)
+        button.click()
+        time.sleep(1)
+        button.send_keys("Medellin, Antioquia")
+        button.send_keys(Keys.RETURN)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[3]/div[3]/div/nav/div/div[1]/a[2]/span'))).click()
+        time.sleep(2)
+
+        temp = driver.find_elements(By.XPATH, "//summary/div/div/div/span[@class='DetailsSummary--tempValue--1K4ka']")
+        temp = [temp.text for temp in temp]
+
+        horasT = driver.find_elements(By.XPATH, "//div/h3")
+        horasT = [horasT.text for horasT in horasT]
+
+        driver.quit()
+
+        indx = datetime.datetime.now()
+        indx = int(indx.strftime('%H'))
+        indx = (24 - indx)
+
+        sHoras = []
+        for hora in horasT:
+            if hora not in sHoras:
+                sHoras.append(hora)
+        for i in range(0, indx):
+            self.horas.append(sHoras[i])
+            self.temperatura.append(temp[i])
+
 class Estudiante():
-    def __init__(self, nombre,  id):
-        self.nombre = nombre
-        self.id = id
-        self.libros = []
+    def __init__(self, nom:str, id:str):
+        self.__nombre:str = nom
+        self.__id:str = id
+        self.horario = None
 
-    def añadir_libro(self, nombre, tema, descripcion):
-        libro=Libros(nombre, self, tema, descripcion)
-        self.libros.append(libro)
+    def instanciar_horario(self, entlun, sallun, entmar, salmar, entmier, salmier, entjue, saljue, entvier, salvier):
+        newHorario = HorarioEstudiante(self.__nombre, entlun, sallun, entmar, salmar, entmier, salmier, entjue, saljue, entvier, salvier)
+        self.horario = newHorario
+        print(f"Horario creado {self.__nombre}")
+        
+    def consultar_ropa(self, dia:str):
+        if dia=="lunes":
+            indx = 26
+            id = 26
+            for i in range(len(scraper.horas)):
+                if scraper.horas[i] == self.horario.lunes["entrada"]:
+                    indx = i
+                if scraper.horas[i] == self.horario.lunes["salida"]:
+                    id = i
+            if indx > 25:
+                print(f"Ya pasaste tu hora de entrada {self.__nombre}")
+            else:
+                print(f"{self.__nombre} cuando entres hoy a la U el clima sera de {scraper.temperatura[indx]}C")            
+            if id > 25:
+                print(f"Ya pasaste tu hora de salida {self.__nombre}")
+            else:
+                print(f"El clima cuando salgas de la U sera de {scraper.temperatura[id]}C")  
 
-    def intercambiar_libro(self, nuevo_prop, libro):
-        nuevo_prop.libros.append(libro)
-        libro.propietario = nuevo_prop
-        self.libros.remove(libro)
+        if dia == "martes":
+            indx = 26
+            id = 26
+            for i in range(len(scraper.horas)):
+                if scraper.horas[i] == self.horario.martes["entrada"]:
+                    indx = i
+                if scraper.horas[i] == self.horario.martes["salida"]:
+                    id = i
+            if indx > 25:
+                print(f"Ya pasaste tu hora de entrada {self.__nombre}")
+            else:
+                print(f"{self.__nombre} cuando entres hoy a la U el clima sera de {scraper.temperatura[indx]}C")            
+            if id > 25:
+                print(f"Ya pasaste tu hora de salida {self.__nombre}")
+            else:
+                print(f"El clima cuando salgas de la U sera de {scraper.temperatura[id]}C")  
+        
+        if dia == "miercoles":
+            indx = 26
+            id = 26
+            for i in range(len(scraper.horas)):
+                if scraper.horas[i] == self.horario.miercoles["entrada"]:
+                    indx = i
+                if scraper.horas[i] == self.horario.miercoles["salida"]:
+                    id = i
+            if indx > 25:
+                print(f"Ya pasaste tu hora de entrada {self.__nombre}")
+            else:
+                print(f"{self.__nombre} cuando entres hoy a la U el clima sera de {scraper.temperatura[indx]}C")            
+            if id > 25:
+                print(f"Ya pasaste tu hora de salida {self.__nombre}")
+            else:
+                print(f"El clima cuando salgas de la U sera de {scraper.temperatura[id]}C")  
 
+        if dia == "jueves":
+            indx = 26
+            id = 26
+            for i in range(len(scraper.horas)):
+                if scraper.horas[i] == self.horario.jueves["entrada"]:
+                    indx = i
+                if scraper.horas[i] == self.horario.jueves["salida"]:
+                    id = i
+            if indx > 25:
+                print(f"Ya pasaste tu hora de entrada {self.__nombre}")
+            else:
+                print(f"{self.__nombre} cuando entres hoy a la U el clima sera de {scraper.temperatura[indx]}C")            
+            if id > 25:
+                print(f"Ya pasaste tu hora de salida {self.__nombre}")
+            else:
+                print(f"El clima cuando salgas de la U sera de {scraper.temperatura[id]}C")  
+        
+        if dia == "viernes":
+            indx = 26
+            id = 26
+            for i in range(len(scraper.horas)):
+                if scraper.horas[i] == self.horario.viernes["entrada"]:
+                    indx = i
+                if scraper.horas[i] == self.horario.viernes["salida"]:
+                    id = i
+            if indx > 25:
+                print(f"Ya pasaste tu hora de entrada {self.__nombre}")
+            else:
+                print(f"{self.__nombre} cuando entres hoy a la U el clima sera de {scraper.temperatura[indx]}C")            
+            if id > 25:
+                print(f"Ya pasaste tu hora de salida {self.__nombre}")
+            else:
+                print(f"El clima cuando salgas de la U sera de {scraper.temperatura[id]}C")  
+        
 
-class Libros():
-    def __init__(self, nombre, propietario, tema, descripcion):
-        self.nombre = nombre
-        self.propietario = propietario
-        self.tema = tema
-        self.descripcion = descripcion 
+class HorarioEstudiante():
+    def __init__(self, nomEstudiante:str, entlun:str, sallun:str, entmar:str, salmar:str, entmier:str, salmier:str, entjue:str, saljue:str, entvier:str, salvier:str):
+        self.__nombreEstudiante = nomEstudiante
+        self.lunes = {"entrada": entlun, "salida": sallun}
+        self.martes = {"entrada": entmar, "salida": salmar}
+        self.miercoles = {"entrada": entmier, "salida": salmier}
+        self.jueves = {"entrada": entjue, "salida": saljue}
+        self.viernes = {"entrada": entvier, "salida": salvier}
+        
+scraper = Scraper()
+    
+stud1 = Estudiante("Juan Felipe Palacio Agudelo", "1011511123")
+stud1.instanciar_horario("10 am", "4 pm", "8 am", "4 pm", "8 am", "4 pm", "8 am", "4 pm", "8 am", "10 am")
+
+stud1.consultar_ropa("lunes")
